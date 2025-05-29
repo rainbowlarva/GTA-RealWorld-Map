@@ -13,14 +13,31 @@
          position:absolute;
          height: 100%; 
          width: 100%;
+         background-color: #153E6A;
+         cursor: crosshair;
       }
 
       body {
          background-color: #153E6A;
       }
+
+      .mouse-coords {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10000;
+  white-space: nowrap;
+}
+
    </style>
    <body>
       <div id="map"/>
+      <!-- Live pins.js from Google Apps Script -->
+<script src="https://script.google.com/macros/s/AKfycbw3Pt-f9RCJ1WgPBiktQV1MHUnmbLu8ZdABZAvf7UdkHPaDVYbsETAIlRuyr96FjDIddg/exec"></script>
 	     <script src="scripts/script.js" ></script>
    </body>
 </html>

@@ -29,7 +29,7 @@ var SateliteStyle = L.tileLayer('mapStyles/styleSatelite/{z}/{x}/{y}.jpg', {minZ
 var ExampleGroup = L.layerGroup();
 
 var Icons = {
-	"Example" :ExampleGroup,
+	"Locations" :ExampleGroup,
 };
 
 var mymap = L.map('map', {
@@ -51,11 +51,69 @@ function customIcon(icon){
 	return L.icon({
 		iconUrl: `blips/${icon}.png`,
 		iconSize:     [20, 20],
-		iconAnchor:   [20, 20], 
-		popupAnchor:  [-10, -27]
+		iconAnchor:   [10, 10], 
+		popupAnchor:  [0, -5]
 	});
 }
 
-var X  = 0;
-var Y = 0;
-L.marker([Y,X], {icon: customIcon(1)}).addTo(Icons["Example"]).bindPopup("I am here.");
+const coordDisplay = L.DomUtil.create('div', 'mouse-coords');
+document.body.appendChild(coordDisplay);
+
+mymap.on('mousemove', function(e) {
+  coordDisplay.style.left = (e.originalEvent.pageX + 10) + 'px';
+  coordDisplay.style.top = (e.originalEvent.pageY + 10) + 'px';
+  coordDisplay.innerHTML = `X: ${e.latlng.lng.toFixed(2)}<br>Y: ${e.latlng.lat.toFixed(2)}`;
+});
+
+mymap.on('mouseout', function() {
+  coordDisplay.style.display = 'none';
+});
+mymap.on('mouseover', function() {
+  coordDisplay.style.display = 'block';
+});
+
+if (typeof pinData !== 'undefined') {
+  pinData.forEach(pin => {
+    L.marker([pin.y, pin.x], {
+      icon: customIcon(pin.icon)
+    }).addTo(Icons["Locations"]).bindPopup(pin.label);
+  });
+}
+
+let currentPins = [];
+
+function loadPins() {
+  fetch("https://script.google.com/macros/s/AKfycbw3Pt-f9RCJ1WgPBiktQV1MHUnmbLu8ZdABZAvf7UdkHPaDVYbsETAIlRuyr96FjDIddg/exec") // ← replace with your actual Web App URL
+    .then(response => response.text())
+    .then(jsCode => {
+      const pinData = [];
+      eval(jsCode); // populates pinData
+      updateMapWithPins(pinData);
+    });
+}
+
+function updateMapWithPins(newPins) {
+  // Compare with current pins to avoid duplicates
+  const newJSON = JSON.stringify(newPins);
+  const currentJSON = JSON.stringify(currentPins);
+  if (newJSON === currentJSON) return; // no changes
+
+  currentPins = newPins;
+
+  // Clear previous pins layer
+  Icons["Locations"].clearLayers();
+
+  newPins.forEach(pin => {
+    if (Number.isFinite(pin.x) && Number.isFinite(pin.y)) {
+      L.marker([pin.y, pin.x], {
+        icon: customIcon(pin.icon)
+      }).addTo(Icons["Locations"]).bindPopup(pin.label || "Unnamed");
+    }
+  });
+}
+
+// Initial load
+loadPins();
+
+// Refresh every 10 seconds
+setInterval(loadPins, 10000);
