@@ -71,6 +71,26 @@
     border: 1px solid #aaa;
     border-radius: 4px;
   }
+
+  .submit-blip-link {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.submit-blip-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 </style>
 <body>
   <div id="map"></div>
@@ -86,6 +106,10 @@
       <button onclick="copySingleCoord('yCoord')">Copy</button>
     </div>
   </div>
+
+  <a class="submit-blip-link" href="https://docs.google.com/forms/d/e/1FAIpQLSd5eOCAFlZ9d78QJHiOY0BdtQuNRKjLtep1OZEVHI1k0_sTRw/viewform" target="_blank">
+  Submit a blip
+</a>
 
   <script>
     function copySingleCoord(id) {
