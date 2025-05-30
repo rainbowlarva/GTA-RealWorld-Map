@@ -60,10 +60,12 @@ var mymap = L.map('map', {
   Zoom: 5,
   maxNativeZoom: 5,
   preferCanvas: true,
-  layers: [SateliteStyle],
+layers: [AtlasStyle],
   center: [0, 0],
   zoom: 3,
 });
+
+ExampleGroup.addTo(mymap);
 
 var layersControl = L.control.layers(
   { "Satelite": SateliteStyle, "Atlas": AtlasStyle, "Grid": GridStyle },
