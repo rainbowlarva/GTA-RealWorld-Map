@@ -110,15 +110,21 @@ mymap.on('click', function (e) {
 
 if (typeof pinData !== 'undefined') {
   pinData.forEach(pin => {
-    L.marker([pin.y, pin.x], {
-      icon: customIcon(pin.icon)
-    }).addTo(Icons["Locations"]).bindPopup(pin.label);
+L.marker([pin.y, pin.x], {
+  icon: customIcon(pin.icon)
+})
+.addTo(Icons["Locations"])
+.bindPopup(
+  pin.link
+    ? `<strong>${pin.label}</strong><br><a href="${pin.link}" target="_blank">${pin.link}</a>`
+    : `<strong>${pin.label}</strong>`
+);
   });
 }
 
 function updateMapWithPins(pins) {
   if (!Icons["Locations"]) {
-    Icons["Locations"] = L.layerGroup().addTo(map);
+    Icons["Locations"] = L.layerGroup().addTo(mymap);
   } else {
     Icons["Locations"].clearLayers();
   }
@@ -128,8 +134,12 @@ function updateMapWithPins(pins) {
       L.marker([pin.y, pin.x], {
         icon: customIcon(pin.icon)
       })
-        .addTo(Icons["Locations"])
-        .bindPopup(pin.label || "Unnamed");
+      .addTo(Icons["Locations"])
+      .bindPopup(
+        pin.link
+          ? `<strong>${pin.label}</strong><br><a href="${pin.link}" target="_blank" rel="noopener noreferrer">${pin.link}</a>`
+          : `<strong>${pin.label}</strong>`
+      );
     }
   });
 }
